@@ -1,0 +1,11 @@
+<%= label_tag "firebase_app" %>
+<%= text_field_tag "firebase_app", nil %>
+
+<%= form_for @upload, html: { class: "dropzone" } do |f| %>
+  <div class="fallback">
+    <%= f.file_field :file %>
+    <%= f.submit "Upload" %>
+  </div>
+<% end %>
+
+<p id="complete"></p>
