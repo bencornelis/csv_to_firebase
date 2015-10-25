@@ -72,14 +72,15 @@ $(function() {
           contentType: false,
           processData: false
         }).done(function(response) {
-          var $headers = getTemplate().find(".headers");
+          var $metadata = getTemplate().find(".file-metadata");
           if (response.error) {
-            $headers.text("Error: " + response.error);
-            $headers.addClass("error")
+            $metadata.html("<p>" + response.error + "</p>");
+            $metadata.addClass("error")
 
             disableStartButton();
           } else {
-            $headers.text("Column headers: " + response.column_headers.join(", "));
+            $metadata.html("<p>Column headers: " + response.column_headers.join(", ") + "</p>" +
+                           "<p>Rows: " + response.rows_count + "</p>");
           }
         });
 
@@ -93,7 +94,19 @@ $(function() {
       });
 
       this.on("success", function(file, response) {
-        getTemplate().find(".message").text(response.message)
+        $message = getTemplate().find(".message")
+
+        if (response.error) {
+          $message.text(response.error);
+        } else {
+          var url =
+            "https://" + response.upload.firebase_app + ".firebaseio.com/" + response.upload.resource;
+            
+          $message.html(
+            "<p>Upload successful!</p>" +
+            "<p>Entries uploaded to <a href ='" + url + "'>" + url + "</a></p>"
+          );
+        }
       });
 
       this.on("sending", function(file, xhr, formData) {

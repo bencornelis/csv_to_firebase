@@ -3,12 +3,14 @@ class UploadsController < ApplicationController
   end
 
   def column_headers
-    headers = open_file.row(1)
+    opened_file = open_file
+    headers = opened_file.row(1)
 
     if headers.any?(&:nil?)
       render :json => { "error" => "Some headers were empty." }
     else
-      render :json => { "column_headers" => headers }
+      render :json => { "column_headers" => headers,
+                        "rows_count"     => opened_file.last_row - 1 }
     end
   end
 
@@ -22,11 +24,10 @@ class UploadsController < ApplicationController
                       file_name:     params[:file].original_filename,
                       rows_count:    response.body.size,
                       columns_count: response.body.first.size)
-
-      render :json => {"message" => "Upload successful!",
-                       "upload"  => @upload }
+                      
+      render :json => { "upload"  => @upload }
     else
-      render :json => {"message" => response.body["error"]}
+      render :json => {"error" => response.body["error"] }
     end
   end
 
