@@ -14,5 +14,4 @@ class FirebaseSender
 private
 
   attr_reader :objects, :firebase_app, :resource
-
 end

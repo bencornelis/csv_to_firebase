@@ -3,8 +3,14 @@ class UploadsController < ApplicationController
     @upload = Upload.new
   end
 
+  def column_headers
+    headers = open_file.row(1)
+    render :json => { "column_headers" => headers }
+  end
+
   def create
     response = send_to_firebase
+    sleep(1)
 
     if response.success?
       @upload =
