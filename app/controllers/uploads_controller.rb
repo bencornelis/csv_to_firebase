@@ -1,11 +1,15 @@
 class UploadsController < ApplicationController
   def new
-    @upload = Upload.new
   end
 
   def column_headers
     headers = open_file.row(1)
-    render :json => { "column_headers" => headers }
+
+    if headers.any?(&:nil?)
+      render :json => { "error" => "Some headers were empty." }
+    else
+      render :json => { "column_headers" => headers }
+    end
   end
 
   def create

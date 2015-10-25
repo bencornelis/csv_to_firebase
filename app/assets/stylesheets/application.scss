@@ -22,6 +22,25 @@ body {
   margin: 30px;
 }
 
+#new_upload {
+  border: 2px dashed #337ab7;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
 .message {
   margin-top: 20px;
+}
+
+.faded {
+  opacity: 0.5;
+}
+
+.field-required {
+  border: 2px solid #a94442;
+}
+
+.error {
+  color: #a94442;
+  font-weight: bold;
 }

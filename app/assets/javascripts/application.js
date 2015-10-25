@@ -32,11 +32,37 @@ $(function() {
     acceptedFiles: ".csv,.xls,.xlsx",
 
     init: function() {
+      var getTemplate = function() {
+        return $(".template").last();
+      }
+
+      var getStartButton = function() {
+        return getTemplate().find("button.start");
+      }
+
+      var disableStartButton = function() {
+        $startButton = getStartButton();
+        $startButton.prop("disabled", true);
+        $startButton.addClass("faded");
+      }
+
       this.on("addedfile", function(file) {
-        var $template = $(".template").last()
+        if (!$("#firebase_app").val()) {
+          this.removeFile(file);
+          $("#firebase_app_required").text("Firebase app required!");
+          $("#firebase_app").addClass("field-required");
+
+          $("#firebase_app").keyup(function() {
+            $("#firebase_app_required").empty();
+            $("#firebase_app").removeClass("field-required");
+          })
+          return;
+        }
 
         var formData = new FormData();
         formData.append("file", file);
+
+        // get column headers and display them
         $.ajax({
           dataType: "json",
           url: "/column_headers",
@@ -46,25 +72,35 @@ $(function() {
           contentType: false,
           processData: false
         }).done(function(response) {
-          $template.find(".headers").text("Column headers: " + response.column_headers.join(", "))
+          var $headers = getTemplate().find(".headers");
+          if (response.error) {
+            $headers.text("Error: " + response.error);
+            $headers.addClass("error")
+
+            disableStartButton();
+          } else {
+            $headers.text("Column headers: " + response.column_headers.join(", "));
+          }
         });
 
+        // hook up start button
         var dropzone = this;
-        $template.find("button.start").click(function() { dropzone.enqueueFile(file); });
+        getStartButton().click(function() { dropzone.enqueueFile(file); });
       });
 
       this.on("totaluploadprogress", function(progress) {
-        $(".template").last().find(".progress-bar").width(progress + "%");
+        getTemplate().find(".progress-bar").width(progress + "%");
       });
 
       this.on("success", function(file, response) {
-        $(".template").last().find(".message").text(response.message)
+        getTemplate().find(".message").text(response.message)
       });
 
       this.on("sending", function(file, xhr, formData) {
-        // $("#total-progress").style.opacity = "1";
-        formData.append("firebase_app", $("#firebase_app").val());
-        $(".template").last().find("button.start").prop("disabled", true);
+        var firebaseApp = $("#firebase_app").val();
+        formData.append("firebase_app", firebaseApp);
+
+        disableStartButton();
       });
 
       this.on("queuecomplete", function(progress) {
