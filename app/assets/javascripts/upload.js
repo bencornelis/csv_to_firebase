@@ -91,7 +91,7 @@ $(function() {
         } else {
           getTemplate().find(".upload-success").show();
 
-          var url = response.upload.url;
+          var url = response.url;
           $message.html(
             "<p>Upload successful!</p>" +
             "<p>Entries uploaded to <a href ='" + url + "'>" + url + "</a></p>"

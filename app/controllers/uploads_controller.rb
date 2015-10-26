@@ -14,16 +14,15 @@ class UploadsController < ApplicationController
 
   def create
     response = send_to_firebase
-    sleep(1)
 
     @upload =
       Upload.new(firebase_app:  params[:firebase_app],
                  file_name:     file_name,
                  rows_count:    response.body.size,
                  columns_count: response.body.first.size)
-
+                 
     if response.success? && @upload.save
-      render :json => { "upload"  => @upload }
+      render :json => @upload
     else
       error = response.body["error"] || @upload.errors.full_messages.last
       render :json => { "error" => error }
