@@ -3,7 +3,7 @@ class UploadsController < ApplicationController
   end
 
   def file_metadata
-    metadata = FileConverter.new(open_file).metadata
+    metadata = file_converter.metadata
 
     if metadata[:column_headers].any?(&:nil?)
       render :json => { "error" => "Some headers were empty." }
@@ -31,14 +31,6 @@ class UploadsController < ApplicationController
 
   private
 
-  def convert_file_to_objects
-    file_converter.convert
-  end
-
-  def get_file_metadata
-    file_converter.metadata
-  end
-
   def file_converter
     FileConverter.new(open_file)
   end
@@ -49,9 +41,8 @@ class UploadsController < ApplicationController
 
   def send_to_firebase
     FirebaseSender.new(
-      objects: convert_file_to_objects,
-      file_name: params[:file].original_filename,
-      firebase_app: params[:firebase_app]
+      file_converter.convert,
+      params.permit(:file, :firebase_app)
     ).send
   end
 end

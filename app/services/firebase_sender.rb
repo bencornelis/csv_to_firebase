@@ -1,8 +1,8 @@
 class FirebaseSender
-  def initialize(args)
-    @objects = args[:objects]
-    @firebase_app = args[:firebase_app]
-    @resource = File.basename(args[:file_name], ".*")
+  def initialize(objects, params)
+    @objects = objects
+    @firebase_app = params[:firebase_app]
+    @resource = File.basename(params[:file].original_filename, ".*")
   end
 
   def send

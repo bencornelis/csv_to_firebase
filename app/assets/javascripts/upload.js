@@ -84,9 +84,7 @@ $(function() {
         } else {
           getTemplate().find(".upload-success").show();
 
-          var url =
-            "https://" + response.upload.firebase_app + ".firebaseio.com/" + response.upload.resource;
-
+          var url = response.upload.url;
           $message.html(
             "<p>Upload successful!</p>" +
             "<p>Entries uploaded to <a href ='" + url + "'>" + url + "</a></p>"
@@ -99,9 +97,6 @@ $(function() {
         formData.append("firebase_app", firebaseApp);
 
         disableStartButton();
-      });
-
-      this.on("queuecomplete", function(progress) {
       });
     }
   }
