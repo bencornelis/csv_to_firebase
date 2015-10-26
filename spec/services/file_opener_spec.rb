@@ -15,13 +15,6 @@ describe FileOpener do
       )
   end
 
-  let(:invalid_csv) do
-    fixture_file_upload(
-      "/files/invalid.csv",
-      "text/csv"
-      )
-  end
-
   let(:planets_csv_opener) do
     FileOpener.new(planets_csv)
   end

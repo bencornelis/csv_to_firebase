@@ -86,7 +86,7 @@ $(function() {
         $message = getTemplate().find(".message")
 
         if (response.error) {
-          $message.text(response.error);
+          $message.text("Error: " + response.error);
           getTemplate().find(".upload-failure").show();
         } else {
           getTemplate().find(".upload-success").show();
