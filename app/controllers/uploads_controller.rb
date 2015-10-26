@@ -19,7 +19,7 @@ class UploadsController < ApplicationController
     if response.success?
       @upload =
         Upload.create(firebase_app:  params[:firebase_app],
-                      file_name:     params[:file].original_filename,
+                      file_name:     file_name,
                       rows_count:    response.body.size,
                       columns_count: response.body.first.size)
 
@@ -39,10 +39,15 @@ class UploadsController < ApplicationController
     FileOpener.new(params[:file]).open_file
   end
 
+  def file_name
+    params[:file].original_filename
+  end
+
   def send_to_firebase
     FirebaseSender.new(
-      file_converter.convert,
-      params.permit(:file, :firebase_app)
+      objects:      file_converter.convert,
+      file_name:    file_name,
+      firebase_app: params[:firebase_app]
     ).send
   end
 end

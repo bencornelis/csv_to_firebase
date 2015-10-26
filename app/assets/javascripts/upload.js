@@ -44,7 +44,7 @@ $(function() {
         var formData = new FormData();
         formData.append("file", file);
 
-        // get column headers and display them
+        // get file metadata and display
         $.ajax({
           dataType: "json",
           url: "/file_metadata",
@@ -56,7 +56,7 @@ $(function() {
         }).done(function(response) {
           var $metadata = getTemplate().find(".file-metadata");
           if (response.error) {
-            $metadata.html("<p>" + response.error + "</p>");
+            $metadata.html("<p>Error: " + response.error + "</p>");
             $metadata.addClass("error")
 
             disableStartButton();
