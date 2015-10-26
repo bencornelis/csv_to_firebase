@@ -5,13 +5,27 @@ class FileConverter
   end
 
   def convert
-    header = opened_file.row(1)
-    (2..opened_file.last_row).map do |i|
+    (2..total_rows).map do |i|
       Hash[header.zip(opened_file.row(i))]
     end
+  end
+
+  def metadata
+    {
+      column_headers: header,
+      rows_count:     total_rows - 1
+    }
   end
 
 private
 
   attr_reader :opened_file
+
+  def header
+    opened_file.row(1)
+  end
+
+  def total_rows
+    opened_file.last_row
+  end
 end

@@ -2,15 +2,13 @@ class UploadsController < ApplicationController
   def new
   end
 
-  def column_headers
-    opened_file = open_file
-    headers = opened_file.row(1)
+  def file_metadata
+    metadata = FileConverter.new(open_file).metadata
 
-    if headers.any?(&:nil?)
+    if metadata[:column_headers].any?(&:nil?)
       render :json => { "error" => "Some headers were empty." }
     else
-      render :json => { "column_headers" => headers,
-                        "rows_count"     => opened_file.last_row - 1 }
+      render :json => metadata
     end
   end
 
@@ -24,7 +22,7 @@ class UploadsController < ApplicationController
                       file_name:     params[:file].original_filename,
                       rows_count:    response.body.size,
                       columns_count: response.body.first.size)
-                      
+
       render :json => { "upload"  => @upload }
     else
       render :json => {"error" => response.body["error"] }
@@ -34,7 +32,15 @@ class UploadsController < ApplicationController
   private
 
   def convert_file_to_objects
-    FileConverter.new(open_file).convert
+    file_converter.convert
+  end
+
+  def get_file_metadata
+    file_converter.metadata
+  end
+
+  def file_converter
+    FileConverter.new(open_file)
   end
 
   def open_file

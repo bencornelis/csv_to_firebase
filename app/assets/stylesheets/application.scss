@@ -44,3 +44,20 @@ body {
   color: #a94442;
   font-weight: bold;
 }
+
+#firebase_app {
+  padding: 5px;
+}
+
+.upload-success, .upload-failure {
+  display: none;
+  font-size: 1.5em;
+}
+
+.upload-success {
+  color: #5cb85c;
+}
+
+.upload-failure {
+  color: #d9534f;
+}
