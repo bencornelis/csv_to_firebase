@@ -15,7 +15,7 @@ $(function() {
 
     init: function() {
       var getTemplate = function() {
-        return $(".template").last();
+        return $(".template").first();
       }
 
       var getStartButton = function() {
@@ -27,6 +27,13 @@ $(function() {
         $startButton.prop("disabled", true);
         $startButton.addClass("faded");
       }
+
+      this.on("drop", function(e) {
+        var last_file = this.files[0];
+        if (last_file) {
+          this.removeFile(last_file);
+        }
+      });
 
       this.on("addedfile", function(file) {
         if (!$("#firebase_app").val()) {
