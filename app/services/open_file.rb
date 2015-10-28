@@ -1,9 +1,9 @@
-class FileOpener
+class OpenFile
   def initialize(file)
     @file = file
   end
 
-  def open_file
+  def call
     case file_type
     when ".csv" then Roo::CSV.new(file.path)
     when ".xls" then Roo::Excel.new(file.path)

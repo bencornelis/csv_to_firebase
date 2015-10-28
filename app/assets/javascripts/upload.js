@@ -51,6 +51,7 @@ $(function() {
         var formData = new FormData();
         formData.append("file", file);
 
+        $("body").addClass("loading");
         // get file metadata and display
         $.ajax({
           dataType: "json",
@@ -68,18 +69,24 @@ $(function() {
 
             disableStartButton();
           } else {
-            $metadata.html("<p>Column headers: " + response.column_headers.join(", ") + "</p>" +
+            $metadata.html("<p>Column headers: " + response.headers.join(", ") + "</p>" +
                            "<p>Rows: " + response.rows_count + "</p>");
           }
+
+          $("body").removeClass("loading");
         });
 
         // hook up start button
         var dropzone = this;
-        getStartButton().click(function() { dropzone.enqueueFile(file); });
+        getStartButton().click(function() {
+          dropzone.enqueueFile(file);
+        });
       });
 
-      this.on("totaluploadprogress", function(progress) {
-        getTemplate().find(".progress-bar").width(progress + "%");
+      this.on("uploadprogress", function(file, progress) {
+        if (progress === 100) {
+          // setTimeout(function() {  $("body").addClass("loading") }, 1000);
+        }
       });
 
       this.on("success", function(file, response) {
@@ -97,6 +104,8 @@ $(function() {
             "<p>Entries uploaded to <a href ='" + url + "'>" + url + "</a></p>"
           );
         }
+
+        $("body").removeClass("loading");
       });
 
       this.on("sending", function(file, xhr, formData) {

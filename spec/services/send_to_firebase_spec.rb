@@ -1,7 +1,7 @@
 require "rails_helper"
 
-describe FirebaseSender do
-  let(:objects) do
+describe SendToFirebase do
+  let(:planets) do
     [
       {
         "name" => "earth",
@@ -18,7 +18,7 @@ describe FirebaseSender do
     ]
   end
 
-  let(:invalid_objects) do
+  let(:people) do
     [
       {
         "" => "ben",
@@ -31,27 +31,30 @@ describe FirebaseSender do
     ]
   end
 
-  let(:params) do
+  let(:planets_spreadsheet) { double("spreadsheet", to_a: planets) }
+  let(:people_spreadsheet)  { double("spreadsheet", to_a: people) }
+
+  let(:planets_params) do
     {
-      objects:      objects,
+      spreadsheet:  planets_spreadsheet,
       firebase_app: "test-app",
       file_name:    "planets.csv"
     }
   end
 
-  let(:invalid_params) do
+  let(:people_params) do
     {
-      objects:      invalid_objects,
+      spreadsheet:  people_spreadsheet,
       firebase_app: "test-app",
       file_name:    "invalid.csv"
     }
   end
 
-  describe "#send" do
+  describe "#call" do
     it "returns a response object that responds to success?" do
       VCR.use_cassette('planets_csv') do
         expect(
-          FirebaseSender.new(params).send
+          SendToFirebase.new(planets_params).call
         ).to respond_to(:success?)
       end
     end
@@ -59,7 +62,7 @@ describe FirebaseSender do
     context "the objects have nonempty keys" do
       it "is successful" do
         VCR.use_cassette('planets_csv') do
-          response = FirebaseSender.new(params).send
+          response = SendToFirebase.new(planets_params).call
 
           expect(response.success?).to be(true)
         end
@@ -69,7 +72,7 @@ describe FirebaseSender do
     context "one of the keys is empty" do
       it "is unsuccessful" do
         VCR.use_cassette('invalid_csv') do
-          response = FirebaseSender.new(invalid_params).send
+          response = SendToFirebase.new(people_params).call
 
           expect(response.success?).to be(false)
         end

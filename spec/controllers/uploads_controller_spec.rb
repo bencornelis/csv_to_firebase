@@ -29,7 +29,7 @@ describe UploadsController do
 
         body = JSON.parse(response.body)
         expect(body).to eq({
-          "column_headers" => ["name", "radius"],
+          "headers" => ["name", "radius"],
           "rows_count" => 3
         })
       end
@@ -41,7 +41,7 @@ describe UploadsController do
 
         body = JSON.parse(response.body)
         expect(body).to eq({
-          "error" => "Some headers were empty."
+          "error" => "Some headers were empty or contain the characters . $ # [ ] or /."
         })
       end
     end
@@ -51,7 +51,7 @@ describe UploadsController do
     context "the file and firebase app are valid" do
       it "sends the file objects to firebase" do
         VCR.use_cassette('planets_csv') do
-          expect_any_instance_of(FirebaseSender).to receive(:send).once.and_call_original
+          expect_any_instance_of(SendToFirebase).to receive(:call).once.and_call_original
 
           post :create, { file: planets_csv, firebase_app: "test-app" }
         end

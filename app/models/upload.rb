@@ -7,6 +7,13 @@ class Upload < ActiveRecord::Base
   before_create :set_resource
   before_create :set_url
 
+  def self.build(params, firebase_response)
+    new(firebase_app:  params[:firebase_app],
+        file_name:     params[:file].original_filename,
+        rows_count:    firebase_response.body.size,
+        columns_count: firebase_response.body.first.size)
+  end
+
 private
   def set_resource
     self.resource = File.basename(file_name, ".*")
