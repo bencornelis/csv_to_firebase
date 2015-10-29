@@ -7,7 +7,18 @@ class SendToFirebase
 
   def call
     client = Firebase::Client.new("https://#{firebase_app}.firebaseio.com/")
-    client.set(resource, objects)
+
+    objects_sent = 0
+    res = nil
+    objects.each_slice(1000) do |objs|
+      ids = (objects_sent..objects_sent + 1000)
+      data = Hash[ids.zip(objs)]
+      res = client.update(resource, data)
+
+      return res unless res.success?
+      objects_sent += 1000
+    end
+    res
   end
 
 private
