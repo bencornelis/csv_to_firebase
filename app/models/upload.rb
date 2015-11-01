@@ -4,15 +4,8 @@ class Upload < ActiveRecord::Base
   validates :rows_count, presence: true
   validates :columns_count, presence: true
 
-  before_create :set_resource
-  before_create :set_url
-
-  def self.build(params, firebase_response)
-    new(firebase_app:  params[:firebase_app],
-        file_name:     params[:file].original_filename,
-        rows_count:    firebase_response.body.size,
-        columns_count: firebase_response.body.first.size)
-  end
+  before_save :set_resource
+  before_save :set_url
 
 private
   def set_resource

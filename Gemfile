@@ -13,6 +13,7 @@ gem 'firebase'
 gem 'roo'
 gem 'json'
 gem 'dropzonejs-rails'
+gem 'typhoeus'
 
 group :development do
   gem 'byebug'

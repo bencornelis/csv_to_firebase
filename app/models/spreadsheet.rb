@@ -1,5 +1,5 @@
 class Spreadsheet
-  delegate :row, :last_row, to: :opened_file
+  delegate :row, :last_row, :parse, to: :opened_file
 
   def self.build(file)
     new(OpenFile.new(file).call)
@@ -10,7 +10,7 @@ class Spreadsheet
   end
 
   def to_a
-    (headers_idx + 1 .. last_row).map { |i| Hash[headers.zip(row(i))] }
+    parse(header_search: headers)[1..-1]
   end
 
   def metadata

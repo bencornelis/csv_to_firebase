@@ -1,10 +1,11 @@
 class UploadsController < ApplicationController
+
   def new
   end
 
   def file_metadata
     if ValidateHeaders.new(spreadsheet.headers).call
-      render :json => spreadsheet.metadata
+      render :json => metadata
     else
       render :json => { error: "Some headers were empty or contain the characters . $ # [ ] or /." }
     end
@@ -12,12 +13,19 @@ class UploadsController < ApplicationController
 
   def create
     response = send_spreadsheet_to_firebase
-    @upload = Upload.build(upload_params, response)
+
+    @upload =
+      Upload.new(
+        firebase_app:  params[:firebase_app],
+        file_name:     params[:file].original_filename,
+        rows_count:    metadata[:rows_count],
+        columns_count: metadata[:headers].size
+      )
 
     if response.success? && @upload.save
       render :json => @upload
     else
-      error = response.body["error"] || @upload.errors.full_messages.last
+      error = response.error_message || @upload.errors.full_messages.last
       render :json => { "error" => error }
     end
   end
@@ -30,6 +38,10 @@ class UploadsController < ApplicationController
 
   def spreadsheet
     @spreadsheet ||= Spreadsheet.build(params[:file])
+  end
+
+  def metadata
+    @metadata ||= spreadsheet.metadata
   end
 
   def send_spreadsheet_to_firebase
