@@ -1,3 +1,18 @@
+//helper functions
+var getTemplate = function() {
+  return $(".template").first();
+}
+
+var getStartButton = function() {
+  return getTemplate().find("button.start");
+}
+
+var disableStartButton = function() {
+  $startButton = getStartButton();
+  $startButton.prop("disabled", true);
+  $startButton.addClass("faded");
+}
+
 $(function() {
   var previewNode = $(".template");
   previewNode.id = "";
@@ -12,22 +27,38 @@ $(function() {
     autoQueue: false, // Make sure the files aren't queued until manually added
     previewsContainer: "#previews", // Define the container to display the previews
     acceptedFiles: ".csv,.xls,.xlsx",
+    accept: function(file, done) {
+      var formData = new FormData();
+      formData.append("file", file);
+
+      $("body").addClass("loading");
+
+      // get file metadata and display
+      $.ajax({
+        dataType: "json",
+        url: "/file_metadata",
+        type: "POST",
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false
+      }).done(function(response) {
+        $("body").removeClass("loading");
+
+        if (response.error) {
+          disableStartButton();
+          done(response.error);
+        } else {
+          var $metadata = getTemplate().find(".file-metadata");
+          $metadata.html("<p>Column headers: " + response.headers.join(", ") + "</p>" +
+                         "<p>Rows: " + response.rows_count + "</p>");
+          done();
+        }
+      });
+
+    },
 
     init: function() {
-      var getTemplate = function() {
-        return $(".template").first();
-      }
-
-      var getStartButton = function() {
-        return getTemplate().find("button.start");
-      }
-
-      var disableStartButton = function() {
-        $startButton = getStartButton();
-        $startButton.prop("disabled", true);
-        $startButton.addClass("faded");
-      }
-
       this.on("drop", function(e) {
         var last_file = this.files[0];
         if (last_file) {
@@ -36,6 +67,8 @@ $(function() {
       });
 
       this.on("addedfile", function(file) {
+
+        // require firebase app to be specified
         if (!$("#firebase_app").val()) {
           this.removeFile(file);
           $("#firebase_app_required").text("Firebase app required!");
@@ -47,34 +80,6 @@ $(function() {
           })
           return;
         }
-
-        var formData = new FormData();
-        formData.append("file", file);
-
-        $("body").addClass("loading");
-        // get file metadata and display
-        $.ajax({
-          dataType: "json",
-          url: "/file_metadata",
-          type: "POST",
-          data: formData,
-          cache: false,
-          contentType: false,
-          processData: false
-        }).done(function(response) {
-          var $metadata = getTemplate().find(".file-metadata");
-          if (response.error) {
-            $metadata.html("<p>Error: " + response.error + "</p>");
-            $metadata.addClass("error")
-
-            disableStartButton();
-          } else {
-            $metadata.html("<p>Column headers: " + response.headers.join(", ") + "</p>" +
-                           "<p>Rows: " + response.rows_count + "</p>");
-          }
-
-          $("body").removeClass("loading");
-        });
 
         // hook up start button
         var dropzone = this;
