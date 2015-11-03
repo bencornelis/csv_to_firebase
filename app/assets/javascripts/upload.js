@@ -70,6 +70,15 @@ $(function() {
           var $metadata = getTemplate().find(".file-metadata");
           $metadata.html("<p>Column headers: " + response.headers.join(", ") + "</p>" +
                          "<p>Rows: " + response.rows_count + "</p>");
+
+          if (response.rows_count > 20000) {
+            $metadata.append(
+              "<p class='error-message'>" +
+                "Warning: Files with more than 20,000 rows may take longer to upload or timeout." +
+              "</p>"
+            );
+          }
+
           done();
         }
       });
