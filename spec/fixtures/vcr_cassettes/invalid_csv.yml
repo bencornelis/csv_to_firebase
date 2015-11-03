@@ -5,14 +5,15 @@ http_interactions:
     uri: https://test-app.firebaseio.com/invalid.json
     body:
       encoding: UTF-8
-      string: '[{"":"ben","age":"25"},{"":"andy","age":"23"}]'
+      string: '[{"na.me":"ben","ag_e":"24"},{"na.me":"jim","ag_e":"36"},{"na.me":"andy","ag_e":"
+        25"}]'
     headers:
       User-Agent:
       - HTTPClient/1.0 (2.6.0.1, ruby 2.1.6 (2015-04-13))
       Accept:
       - "*/*"
       Date:
-      - Mon, 26 Oct 2015 18:59:40 GMT
+      - Tue, 03 Nov 2015 22:34:56 GMT
       Content-Type:
       - application/json
   response:
@@ -35,5 +36,5 @@ http_interactions:
           "error" : "Invalid data; couldn't parse JSON object, array, or value. Perhaps you're using invalid characters in your key names."
         }
     http_version: 
-  recorded_at: Mon, 26 Oct 2015 18:59:40 GMT
+  recorded_at: Tue, 03 Nov 2015 22:34:57 GMT
 recorded_with: VCR 2.9.3
