@@ -4,38 +4,41 @@
     <!-- This is used as the file preview template -->
     <div class="col-sm-6">
       <div>
-          <span class="preview"><img data-dz-thumbnail /></span>
+        <span class="preview"><img data-dz-thumbnail /></span>
       </div>
       <div>
-          <p class="name" data-dz-name></p>
-          <strong class="error text-danger" data-dz-errormessage></strong>
-          <p class="file-metadata"></p>
+        <p class="name" data-dz-name></p>
+        <strong class="error text-danger" data-dz-errormessage></strong>
+        <p class="file-metadata"></p>
       </div>
       <div>
-          <p class="size" data-dz-size></p>
-          <div class="row">
-            <div class="col-md-11">
-              <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-                <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
-              </div>
-            </div>
-
-            <div class="col-md-1">
-              <div class="upload-complete">
-                <span class="upload-success glyphicon glyphicon-ok"></span>
-                <span class="upload-failure glyphicon glyphicon-remove"></span>
-              </div>
+        <div class="row">
+          <p class="size col-md-2" data-dz-size></p>
+          <p class="upload-status col-md-8"></p>
+        </div>
+        <div class="row">
+          <div class="col-md-11">
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
             </div>
           </div>
+
+          <div class="col-md-1">
+            <div class="upload-complete">
+              <span class="upload-success glyphicon glyphicon-ok"></span>
+              <span class="upload-failure glyphicon glyphicon-remove"></span>
+            </div>
+          </div>
+        </div>
       </div>
       <div>
         <button class="btn-sm btn-primary start">
-            <i class="glyphicon glyphicon-upload"></i>
-            <span>Start</span>
+          <i class="glyphicon glyphicon-upload"></i>
+          <span>Start</span>
         </button>
         <button data-dz-remove class="btn-sm btn-warning cancel">
-            <i class="glyphicon glyphicon-ban-circle"></i>
-            <span>Cancel</span>
+          <i class="glyphicon glyphicon-ban-circle"></i>
+          <span>Cancel</span>
         </button>
         <button data-dz-remove class="btn-sm btn-danger delete">
           <i class="glyphicon glyphicon-trash"></i>

@@ -90,12 +90,13 @@ $(function() {
 
       this.on("uploadprogress", function(file, progress) {
         if (progress === 100) {
-          // setTimeout(function() {  $("body").addClass("loading") }, 1000);
+          $(".upload-status").text("Sending to firebase...");
         }
       });
 
       this.on("success", function(file, response) {
-        $message = getTemplate().find(".message")
+        $(".upload-status").empty();
+        $message = getTemplate().find(".message");
 
         if (response.error) {
           $message.text("Error: " + response.error);
@@ -109,14 +110,13 @@ $(function() {
             "<p>Entries uploaded to <a href ='" + url + "'>" + url + "</a></p>"
           );
         }
-
-        $("body").removeClass("loading");
       });
 
       this.on("sending", function(file, xhr, formData) {
         var firebaseApp = $("#firebase_app").val();
         formData.append("firebase_app", firebaseApp);
 
+        $(".upload-status").text("Uploading file...")
         disableStartButton();
       });
     }
