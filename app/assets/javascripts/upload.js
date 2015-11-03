@@ -24,16 +24,34 @@ $(function() {
     thumbnailHeight: 80,
     parallelUploads: 20,
     previewTemplate: previewTemplate,
+    maxFilesize: 2,
+    dictDefaultMessage: "Drop files here to upload (csv, xls, or xlsx)",
     autoQueue: false, // Make sure the files aren't queued until manually added
     previewsContainer: "#previews", // Define the container to display the previews
     acceptedFiles: ".csv,.xls,.xlsx",
+
     accept: function(file, done) {
       var formData = new FormData();
       formData.append("file", file);
 
-      $("body").addClass("loading");
+      // require firebase app field to be nonempty
+      if (!$("#firebase_app").val()) {
+        this.removeFile(file);
+        $("#firebase_app_required").text("Firebase app required!");
+        $("#firebase_app").addClass("field-required");
+
+        $("#firebase_app").keyup(function() {
+          $("#firebase_app_required").empty();
+          $("#firebase_app").removeClass("field-required");
+        });
+
+        done();
+        return;
+      }
 
       // get file metadata and display
+      $("body").addClass("loading");
+
       $.ajax({
         dataType: "json",
         url: "/file_metadata",
@@ -67,20 +85,6 @@ $(function() {
       });
 
       this.on("addedfile", function(file) {
-
-        // require firebase app to be specified
-        if (!$("#firebase_app").val()) {
-          this.removeFile(file);
-          $("#firebase_app_required").text("Firebase app required!");
-          $("#firebase_app").addClass("field-required");
-
-          $("#firebase_app").keyup(function() {
-            $("#firebase_app_required").empty();
-            $("#firebase_app").removeClass("field-required");
-          })
-          return;
-        }
-
         // hook up start button
         var dropzone = this;
         getStartButton().click(function() {
