@@ -74,7 +74,7 @@ $(function() {
           if (response.rows_count > 20000) {
             $metadata.append(
               "<p class='error-message'>" +
-                "Warning: Files with more than 20,000 rows may take longer to upload or timeout." +
+                "Warning: Files with more than 20,000 rows may take longer to upload, or may timeout." +
               "</p>"
             );
           }
