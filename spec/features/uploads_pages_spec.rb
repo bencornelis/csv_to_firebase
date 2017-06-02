@@ -23,7 +23,7 @@ describe "uploading a file", js: true do
     it "displays a link to the resources on firebase" do
       VCR.use_cassette('planets_csv') do
         visit root_path
-        fill_in "firebase_app", with: "test-app"
+        fill_in "firebase_app_url", with: "https://test-app.firebaseio.com/"
         drop_in_dropzone(Rails.root.join("spec/fixtures/files/planets.csv"))
 
         # a preview of the file is displayed
@@ -33,7 +33,7 @@ describe "uploading a file", js: true do
 
         find("button.start").click
 
-        expect(page).to have_content("https://test-app.firebaseio.com/planets")
+        expect(page).to have_content("https://test-app.firebaseio.com/")
       end
     end
   end

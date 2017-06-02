@@ -11,13 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151026014105) do
+ActiveRecord::Schema.define(version: 20170602204821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "uploads", force: :cascade do |t|
-    t.string   "firebase_app"
     t.string   "file_name"
     t.integer  "rows_count"
     t.integer  "columns_count"

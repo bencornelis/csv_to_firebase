@@ -37,7 +37,7 @@ describe SendToFirebase do
   let(:planets_params) do
     {
       spreadsheet:  planets_spreadsheet,
-      firebase_app: "test-app",
+      url:          "https://test-app.firebaseio.com/",
       file_name:    "planets.csv"
     }
   end
@@ -45,7 +45,7 @@ describe SendToFirebase do
   let(:people_params) do
     {
       spreadsheet:  people_spreadsheet,
-      firebase_app: "test-app",
+      url:          "https://test-app.firebaseio.com/",
       file_name:    "invalid.csv"
     }
   end

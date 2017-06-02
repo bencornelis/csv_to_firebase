@@ -25,7 +25,7 @@ class UploadsController < ApplicationController
   private
 
   def upload_params
-    params.permit(:file, :firebase_app)
+    params.permit(:file, :firebase_app_url)
   end
 
   def spreadsheet
@@ -36,7 +36,7 @@ class UploadsController < ApplicationController
     SendToFirebase.new(
       spreadsheet:  spreadsheet,
       file_name:    params[:file].original_filename,
-      firebase_app: params[:firebase_app]
+      url:          params[:firebase_app_url]
     ).call
   end
 end

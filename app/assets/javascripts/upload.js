@@ -35,14 +35,14 @@ $(function() {
       formData.append("file", file);
 
       // require firebase app field to be nonempty
-      if (!$("#firebase_app").val()) {
+      if (!$("#firebase_app_url").val()) {
         this.removeFile(file);
         $("#firebase_app_required").text("Firebase app required!");
-        $("#firebase_app").addClass("field-required");
+        $("#firebase_app_url").addClass("field-required");
 
-        $("#firebase_app").keyup(function() {
+        $("#firebase_app_url").keyup(function() {
           $("#firebase_app_required").empty();
-          $("#firebase_app").removeClass("field-required");
+          $("#firebase_app_url").removeClass("field-required");
         });
 
         done();
@@ -126,8 +126,8 @@ $(function() {
       });
 
       this.on("sending", function(file, xhr, formData) {
-        var firebaseApp = $("#firebase_app").val();
-        formData.append("firebase_app", firebaseApp);
+        var firebaseApp = $("#firebase_app_url").val();
+        formData.append("firebase_app_url", firebaseApp);
 
         $(".upload-status").text("Uploading file...")
         disableStartButton();

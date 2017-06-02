@@ -53,21 +53,21 @@ describe UploadsController do
         VCR.use_cassette('planets_csv') do
           expect_any_instance_of(SendToFirebase).to receive(:call).once.and_call_original
 
-          post :create, { file: planets_csv, firebase_app: "test-app" }
+          post :create, { file: planets_csv, firebase_app_url: "https://test-app.firebaseio.com/" }
         end
       end
 
       it "creates a new upload" do
         VCR.use_cassette('planets_csv') do
           expect {
-            post :create, { file: planets_csv, firebase_app: "test-app" }
+            post :create, { file: planets_csv, firebase_app_url: "https://test-app.firebaseio.com/" }
           }.to change(Upload, :count).by(1)
         end
       end
 
       it "renders the upload as json" do
         VCR.use_cassette('planets_csv') do
-          post :create, { file: planets_csv, firebase_app: "test-app" }
+          post :create, { file: planets_csv, firebase_app_url: "https://test-app.firebaseio.com/" }
 
           upload = Upload.first
           expect(response.body).to eq(upload.to_json)
@@ -78,7 +78,7 @@ describe UploadsController do
     context "the file is not valid" do
       it "renders an error message as json" do
         VCR.use_cassette('invalid_csv') do
-          post :create, { file: invalid_csv, firebase_app: "test-app" }
+          post :create, { file: invalid_csv, firebase_app_url: "https://test-app.firebaseio.com/" }
 
           body = JSON.parse(response.body)
           expect(body["error"]).not_to be_nil
@@ -88,7 +88,7 @@ describe UploadsController do
       it "does not create an upload" do
         VCR.use_cassette('invalid_csv') do
           expect {
-            post :create, { file: invalid_csv, firebase_app: "test-app" }
+            post :create, { file: invalid_csv, firebase_app_url: "https://test-app.firebaseio.com/" }
           }.not_to change(Upload, :count)
         end
       end
@@ -97,7 +97,7 @@ describe UploadsController do
     context "the firebase app is not valid" do
       it "renders an error message as json" do
         VCR.use_cassette('invalid_app_planets_csv') do
-          post :create, { file: planets_csv, firebase_app: "asdgasdgsd" }
+          post :create, { file: planets_csv, firebase_app_url: "https://asdgasdgsd.firebaseio.com/" }
 
           body = JSON.parse(response.body)
           expect(body["error"]).not_to be_nil
@@ -107,7 +107,7 @@ describe UploadsController do
       it "does not create an upload" do
         VCR.use_cassette('invalid_app_planets_csv') do
           expect {
-            post :create, { file: planets_csv, firebase_app: "asdgasdgsd" }
+            post :create, { file: planets_csv, firebase_app_url: "https://asdgasdgsd.firebaseio.com/" }
           }.not_to change(Upload, :count)
         end
       end
