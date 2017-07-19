@@ -31,22 +31,23 @@ describe SendToFirebase do
     ]
   end
 
-  let(:planets_spreadsheet) { double("spreadsheet", to_a: planets) }
-  let(:people_spreadsheet)  { double("spreadsheet", to_a: people) }
+  let(:planets_spreadsheet) { double(:spreadsheet, to_a: planets) }
+  let(:people_spreadsheet)  { double(:spreadsheet, to_a: people) }
+
+  let(:planets_file) { double(:file, original_filename: "planets.csv") }
+  let(:people_file)  { double(:file, original_filename: "invalid.csv") }
 
   let(:planets_params) do
     {
-      spreadsheet:  planets_spreadsheet,
-      url:          "https://test-app.firebaseio.com/",
-      file_name:    "planets.csv"
+      file: planets_file,
+      firebase_app_url: "https://test-app.firebaseio.com/"
     }
   end
 
   let(:people_params) do
     {
-      spreadsheet:  people_spreadsheet,
-      url:          "https://test-app.firebaseio.com/",
-      file_name:    "invalid.csv"
+      file: people_file,
+      firebase_app_url: "https://test-app.firebaseio.com/"
     }
   end
 
@@ -54,7 +55,7 @@ describe SendToFirebase do
     it "returns a response object that responds to success?" do
       VCR.use_cassette('planets_csv') do
         expect(
-          SendToFirebase.new(planets_params).call
+          SendToFirebase.new(planets_spreadsheet, planets_params).call
         ).to respond_to(:success?)
       end
     end
@@ -62,9 +63,9 @@ describe SendToFirebase do
     context "the objects have nonempty keys" do
       it "is successful" do
         VCR.use_cassette('planets_csv') do
-          response = SendToFirebase.new(planets_params).call
+          response = SendToFirebase.new(planets_spreadsheet, planets_params).call
 
-          expect(response.success?).to be(true)
+          expect(response.success?).to be true
         end
       end
     end
@@ -72,9 +73,9 @@ describe SendToFirebase do
     context "one of the keys is empty" do
       it "is unsuccessful" do
         VCR.use_cassette('invalid_csv') do
-          response = SendToFirebase.new(people_params).call
+          response = SendToFirebase.new(people_spreadsheet, people_params).call
 
-          expect(response.success?).to be(false)
+          expect(response.success?).to be false
         end
       end
     end

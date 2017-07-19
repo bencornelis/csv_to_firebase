@@ -1,8 +1,8 @@
 class SendToFirebase
-  def initialize(params)
-    @spreadsheet  = params[:spreadsheet]
-    @url          = params[:url]
-    @file_name    = params[:file_name]
+  def initialize(spreadsheet, params)
+    @spreadsheet = spreadsheet
+    @url         = params[:firebase_app_url]
+    @file_name   = params[:file].original_filename
   end
 
   def call

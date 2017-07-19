@@ -18,7 +18,7 @@ class UploadsController < ApplicationController
       render :json => @upload
     else
       error = response.body["error"] || @upload.errors.full_messages.last
-      render :json => { "error" => error }
+      render :json => { :error => error }
     end
   end
 
@@ -33,10 +33,6 @@ class UploadsController < ApplicationController
   end
 
   def send_spreadsheet_to_firebase
-    SendToFirebase.new(
-      spreadsheet:  spreadsheet,
-      file_name:    params[:file].original_filename,
-      url:          params[:firebase_app_url]
-    ).call
+    SendToFirebase.new(spreadsheet, upload_params).call
   end
 end
