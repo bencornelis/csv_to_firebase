@@ -3,7 +3,7 @@ class UploadsController < ApplicationController
   end
 
   def file_metadata
-    if ValidateHeaders.new(spreadsheet.headers).call
+    if ValidateHeaders.new(spreadsheet).call
       render :json => spreadsheet.metadata
     else
       render :json => { error: "Some headers were empty or contain the characters . $ # [ ] or /." }

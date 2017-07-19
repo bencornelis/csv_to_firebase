@@ -1,27 +1,28 @@
 require "rails_helper"
 
 describe ValidateHeaders do
-
-  let(:headers1) { ["name", "age", "weight"] }
-  let(:headers2) { ["height", nil] }
-  let(:headers3) { ["lat.lower", "lat.upper"] }
-
   describe "#call" do
     context "some header is nil" do
+      let(:headers) { ["height", nil] }
+      let(:spreadsheet) { double(:spreadsheet, headers: headers)}
       it "is false" do
-        expect(ValidateHeaders.new(headers2).call).to be false
+        expect(ValidateHeaders.new(spreadsheet).call).to be false
       end
     end
 
     context "some header contains the char . $ # [ ] or /" do
+      let(:headers) { ["lat.lower", "lat.upper"] }
+      let(:spreadsheet) { double(:spreadsheet, headers: headers)}
       it "is false" do
-        expect(ValidateHeaders.new(headers3).call).to be false
+        expect(ValidateHeaders.new(spreadsheet).call).to be false
       end
     end
 
     context "the headers are valid" do
+      let(:headers) { ["name", "age", "weight"] }
+      let(:spreadsheet) { double(:spreadsheet, headers: headers)}
       it "is true" do
-        expect(ValidateHeaders.new(headers1).call).to be true
+        expect(ValidateHeaders.new(spreadsheet).call).to be true
       end
     end
   end

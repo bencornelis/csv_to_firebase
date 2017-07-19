@@ -1,6 +1,6 @@
 class ValidateHeaders
-  def initialize(headers)
-    @headers = headers
+  def initialize(spreadsheet)
+    @headers = spreadsheet.headers
   end
 
   def call
