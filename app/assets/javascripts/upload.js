@@ -1,14 +1,10 @@
 //helper functions
-var getTemplate = function() {
-  return $(".template").first();
+var startButton = function(file) {
+  return $(file.previewTemplate).find("button.start");
 }
 
-var getStartButton = function() {
-  return getTemplate().find("button.start");
-}
-
-var disableStartButton = function() {
-  $startButton = getStartButton();
+var disableStartButton = function(file) {
+  $startButton = startButton(file);
   $startButton.prop("disabled", true);
   $startButton.addClass("faded");
 }
@@ -51,7 +47,6 @@ $(function() {
 
       // get file metadata and display
       $("body").addClass("loading");
-
       $.ajax({
         dataType: "json",
         url: "/file_metadata",
@@ -62,15 +57,13 @@ $(function() {
         processData: false
       }).done(function(response) {
         $("body").removeClass("loading");
-
         if (response.error) {
-          disableStartButton();
+          disableStartButton(file);
           done(response.error);
         } else {
-          var $metadata = getTemplate().find(".file-metadata");
+          var $metadata = $(file.previewTemplate).find(".file-metadata");
           $metadata.html("<p>Column headers: " + response.headers.join(", ") + "</p>" +
                          "<p>Rows: " + response.rows_count + "</p>");
-
           if (response.rows_count > 20000) {
             $metadata.append(
               "<p class='error-message'>" +
@@ -96,26 +89,26 @@ $(function() {
       this.on("addedfile", function(file) {
         // hook up start button
         var dropzone = this;
-        getStartButton().click(function() {
+        startButton(file).click(function() {
           dropzone.enqueueFile(file);
         });
       });
 
       this.on("uploadprogress", function(file, progress) {
         if (progress === 100) {
-          $(".upload-status").text("Sending to firebase...");
+          $(file.previewTemplate).find(".upload-status").text("Sending to firebase...");
         }
       });
 
       this.on("success", function(file, response) {
-        $(".upload-status").empty();
-        $message = getTemplate().find(".message");
+        $(file.previewTemplate).find(".upload-status").empty();
+        $message = $(file.previewTemplate).find(".message");
 
         if (response.error) {
           $message.text("Error: " + response.error);
-          getTemplate().find(".upload-failure").show();
+          $(file.previewTemplate).find(".upload-failure").show();
         } else {
-          getTemplate().find(".upload-success").show();
+          $(file.previewTemplate).find(".upload-success").show();
 
           var url = response.url;
           $message.html(
@@ -129,8 +122,8 @@ $(function() {
         var firebaseApp = $("#firebase_app_url").val();
         formData.append("firebase_app_url", firebaseApp);
 
-        $(".upload-status").text("Uploading file...")
-        disableStartButton();
+        $(file.previewTemplate).find(".upload-status").text("Uploading file...")
+        disableStartButton(file);
       });
     }
   }
