@@ -33,7 +33,8 @@ describe "uploading a file", js: true do
 
         find("button.start").click
 
-        expect(page).to have_content("https://test-app.firebaseio.com/")
+        expect(page).to have_content("Upload successful!")
+        expect(page).to have_content("https://test-app.firebaseio.com/planets")
       end
     end
   end
